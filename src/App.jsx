@@ -10,8 +10,8 @@ function App() {
     <div className="contenedor">
       <Navbar/>
         <Routes>
-          <Route path="/" element={<Formulariologin></Formulariologin>}></Route>
-          <Route path="/crear" element={<Formulariocrear></Formulariocrear>}></Route>
+          <Route path="/" element={<Formulariologin/>}></Route>
+          <Route path="/crear" element={<Formulariocrear/>}></Route>
         </Routes>
     </div>
     </>
