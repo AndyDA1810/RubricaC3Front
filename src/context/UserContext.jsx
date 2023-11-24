@@ -1,5 +1,10 @@
 import { createContext, useContext, useEffect, useState } from "react";
-import { CerrarSesion, Crearusuario, IniciarSesion } from "../api/login";
+import {
+  CerrarSesion,
+  Crearusuario,
+  IniciarSesion,
+  obtenerUsuario,
+} from "../api/login";
 import Cookies from "universal-cookie";
 
 export const userContext = createContext();
@@ -43,8 +48,8 @@ export const UserProvider = ({ children }) => {
   };
 
   const logoutUser = async () => {
-    const res = await CerrarSesion()
-    console.log(res)
+    const res = await CerrarSesion();
+    console.log(res);
     setUser(null);
     setIsAuthenticated(false);
     cookies.remove("token");
@@ -58,9 +63,46 @@ export const UserProvider = ({ children }) => {
     }
   }, [error]);
 
+  useEffect(() => {
+    async function validadSesion() {
+      const token = cookies.get("token");
+      if (token) {
+        try {
+          const res = await obtenerUsuario();
+          if (!res.data) {
+            setIsAuthenticated(false);
+            setUser(null);
+            setLoading(false);
+          } else {
+            setIsAuthenticated(true);
+            setUser(res.data.message);
+            setLoading(false);
+          }
+        } catch (error) {
+          setUser(null);
+          setLoading(false);
+          setError(error.response.data.message);
+        }
+      } else {
+        setIsAuthenticated(false);
+        setUser(null);
+        setLoading(false);
+      }
+    }
+    validadSesion();
+  }, []);
+
   return (
     <userContext.Provider
-      value={{ user, loading, error, isAuthenticated, CreateUser, loginUser, logoutUser }}
+      value={{
+        user,
+        loading,
+        error,
+        isAuthenticated,
+        CreateUser,
+        loginUser,
+        logoutUser,
+      }}
     >
       {children}
     </userContext.Provider>

@@ -1,16 +1,19 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { useUser } from "../context/UserContext";
+import { useNavigate } from "react-router-dom";
 
 const Formulariologin = () => {
-  const { loginUser, error } = useUser();
+  const { loginUser, error, user, loading, isAuthenticated } = useUser();
+
+  const navigate = useNavigate();
 
   const validationSchema = Yup.object({
     id: Yup.string().required("La cédula o ciudadanía es requerida"),
     pass: Yup.string()
       .required("La contraseña es requerida")
-      .min(6, "La contraseña debe tener al menos 6 Digitos"),
+      .min(4, "La contraseña debe tener al menos 6 Digitos"),
   });
 
   const formik = useFormik({
@@ -24,9 +27,20 @@ const Formulariologin = () => {
         id: value.id,
         pass: value.pass,
       };
-      loginUser(user)
+      loginUser(user);
     },
   });
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      if (user.Rol === "Admin") {
+        navigate("/productos");
+      } else {
+        navigate("/ventas");
+      }
+    }
+  }, [isAuthenticated]);
+
   return (
     <div className="container mt-5">
       <div className="row justify-content-center">
