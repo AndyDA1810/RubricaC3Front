@@ -33,11 +33,7 @@ const Formulariologin = () => {
 
   useEffect(() => {
     if (isAuthenticated) {
-      if (user.Rol === "Admin") {
-        navigate("/productos");
-      } else {
-        navigate("/ventas");
-      }
+      navigate("/productos");
     }
   }, [isAuthenticated]);
 

@@ -8,7 +8,7 @@ import { useUser } from "../context/UserContext";
 const FormularioEditarProducto = () => {
   const [editar, setEditar] = useState(false);
 
-  const { createProducto, _obtenerProducto, _editarProducto } = useProductos();
+  const { _obtenerProducto, _editarProducto } = useProductos();
 
   const parametros = useParams();
 

@@ -33,28 +33,22 @@ const Productos = () => {
     );
   }
 
-  if (user.Rol === "cliente") {
-    return (window.location.href = "/Ventas");
-  }
-
   if (productos === null) {
     return <h1>Cargango</h1>;
   }
 
-  // const handleDelete = async (id) => {
-  //   try {
-  //     const response=await EliminarProducto
-  //   } catch (error) {
-  //     console.log(error);
-  //   }
-  // }
-
   return (
     <div className="container">
       <div className="row">
-        <a href="/productos/crear" className="btn btn-outline-primary mt-3">
-          CREAR UN PRODUCTO
-        </a>
+        {user.Rol === "cliente" ? (
+          <a href="/ventas" className="btn btn-outline-primary mt-3">
+            Ver todas las ventas
+          </a>
+        ) : (
+          <a href="/productos/crear" className="btn btn-outline-primary mt-3">
+            CREAR UN PRODUCTO
+          </a>
+        )}
 
         {productos.map((producto) => {
           return (
@@ -69,20 +63,31 @@ const Productos = () => {
                   <p className="card-text">
                     <strong>Stock:</strong> {producto.Stock}
                   </p>
-                  <div className="d-flex justify-content-between align-items-center">
-                    <Link
-                      className="btn btn-outline-primary float-end me-2"
-                      to={`/productos/editar/${producto.Codigo}`}
-                    >
-                      Editar
-                    </Link>
-                    <button
-                      className="btn btn-outline-danger float-end me-2"
-                      onClick={() => handleDelete(producto.Codigo)}
-                    >
-                      Eliminar
-                    </button>
-                  </div>
+                  {user.Rol === "cliente" ? (
+                    <div>
+                      <Link
+                        className="btn btn-outline-primary"
+                        to={`/ventas/${producto.Codigo}`}
+                      >
+                        Comprar
+                      </Link>
+                    </div>
+                  ) : (
+                    <div className="d-flex justify-content-between align-items-center">
+                      <Link
+                        className="btn btn-outline-primary float-end me-2"
+                        to={`/productos/editar/${producto.Codigo}`}
+                      >
+                        Editar
+                      </Link>
+                      <button
+                        className="btn btn-outline-danger float-end me-2"
+                        onClick={() => handleDelete(producto.Codigo)}
+                      >
+                        Eliminar
+                      </button>
+                    </div>
+                  )}
                 </div>
               </div>
             </div>

@@ -4,6 +4,7 @@ import Formulariocrear from "./pages/Formulariocrear";
 import Navbar from "./components/Navbar";
 import { UserProvider } from "./context/UserContext";
 import { ProductosProvider } from "./context/ProductosContext";
+import { VentaProvider } from "./context/VentaContexto";
 import FormularioProductos from "./pages/FormularioProductos";
 import FormularioVentas from "./pages/FormularioVentas";
 import Productos from "./pages/Productos";
@@ -42,7 +43,16 @@ function App() {
                 </ProductosProvider>
               }
             />
-            <Route path="/ventas" element={<FormularioVentas />} />
+            <Route
+              path="/ventas/:codigo"
+              element={
+                <ProductosProvider>
+                  <VentaProvider>
+                    <FormularioVentas />
+                  </VentaProvider>
+                </ProductosProvider>
+              }
+            />
           </Routes>
         </UserProvider>
       </div>
