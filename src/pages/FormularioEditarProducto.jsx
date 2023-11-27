@@ -1,11 +1,16 @@
-import { useUser } from "../context/UserContext";
-import { Link, useNavigate, useParams } from "react-router-dom";
+import React, { useEffect, useState } from "react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { useProductos } from "../context/ProductosContext";
+import { Link, useNavigate, useParams } from "react-router-dom";
+import { useUser } from "../context/UserContext";
 
-function FormularioProductos() {
-  const { createProducto } = useProductos();
+const FormularioEditarProducto = () => {
+  const [editar, setEditar] = useState(false);
+
+  const { createProducto, _obtenerProducto, _editarProducto } = useProductos();
+
+  const parametros = useParams();
 
   const validationSchema = Yup.object({
     Nombre: Yup.string().required("El nombre es requerido"),
@@ -23,8 +28,8 @@ function FormularioProductos() {
     initialValues: {
       Nombre: "",
       Descripcion: "",
-      Precio: "",
-      Stock: "",
+      Precio: 0,
+      Stock: 0,
     },
     validationSchema: validationSchema,
     onSubmit: (values) => {
@@ -34,10 +39,29 @@ function FormularioProductos() {
         Precio: values.Precio,
         Stock: values.Stock,
       };
-      createProducto(product);
+      _editarProducto(parametros.codigo, product);
       window.location.href = "/productos";
     },
   });
+
+  useEffect(() => {
+    async function informacionproducto() {
+      if (!parametros.codigo) {
+        return;
+      }
+      setEditar(true);
+      const res = await _obtenerProducto(parametros.codigo);
+
+      formik.setValues({
+        Nombre: res[0].Nombre,
+        Descripcion: res[0].Descripcion,
+        Precio: res[0].Precio,
+        Stock: res[0].Stock,
+      });
+    }
+
+    informacionproducto();
+  }, [parametros.codigo, formik.setValues]);
 
   const { loading, user, isAuthenticated } = useUser();
 
@@ -69,7 +93,7 @@ function FormularioProductos() {
   return (
     <div className="container mt-5">
       <div className="">
-        <h1>Crear Produto</h1>
+        <h1>Editar Producto</h1>
       </div>
       <div className="row justify-content-center">
         <div className="col-md-6"></div>
@@ -119,7 +143,7 @@ function FormularioProductos() {
                 className="form-control"
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
-                value={formik.values.precio}
+                value={formik.values.Precio}
               />
               {formik.touched.Precio && formik.errors.Precio ? (
                 <div className="error text-danger">{formik.errors.Precio}</div>
@@ -136,7 +160,7 @@ function FormularioProductos() {
                 className="form-control"
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
-                value={formik.values.stock}
+                value={formik.values.Stock}
               />
               {formik.touched.Stock && formik.errors.Stock ? (
                 <div className="error text-danger">{formik.errors.Stock}</div>
@@ -144,12 +168,12 @@ function FormularioProductos() {
             </label>
           </div>
           <button type="submit" className="btn btn-outline-dark">
-            Guardar Producto
+            Editar Producto
           </button>
         </form>
       </div>
     </div>
   );
-}
+};
 
-export default FormularioProductos;
+export default FormularioEditarProducto;

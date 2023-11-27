@@ -55,7 +55,7 @@ const Formulariologin = () => {
             <form onSubmit={formik.handleSubmit}>
               <div className="mb-3">
                 <label htmlFor="id" className="form-label">
-                  Cédula o Ciudadanía:
+                  Cédula de Ciudadanía:
                   <input
                     type="text"
                     id="id"

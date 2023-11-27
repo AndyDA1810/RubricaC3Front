@@ -25,6 +25,8 @@ export const UserProvider = ({ children }) => {
   const [error, setError] = useState("");
   const [isAuthenticated, setIsAuthenticated] = useState(false);
 
+  // Contexto del usuario
+
   const CreateUser = async (user) => {
     try {
       const res = await Crearusuario(user);
@@ -60,33 +62,33 @@ export const UserProvider = ({ children }) => {
       const timer = setTimeout(() => {
         setError("");
       }, 2000);
+      return () => clearTimeout(timer);
     }
   }, [error]);
 
   useEffect(() => {
     async function validadSesion() {
-      const token = cookies.get("token");
-      if (token) {
-        try {
-          const res = await obtenerUsuario();
-          if (!res.data) {
-            setIsAuthenticated(false);
-            setUser(null);
-            setLoading(false);
-          } else {
-            setIsAuthenticated(true);
-            setUser(res.data.message);
-            setLoading(false);
-          }
-        } catch (error) {
-          setUser(null);
-          setLoading(false);
-          setError(error.response.data.message);
-        }
-      } else {
+      let token = cookies.get("token");
+      if (!token) {
         setIsAuthenticated(false);
+        setLoading(false);
+        return setUser(null);
+      }
+
+      try {
+        const res = await obtenerUsuario();
+        if (!res.data) {
+          setIsAuthenticated(false);
+          setLoading(false);
+        }
+
+        setUser(res.data.datos);
+        setIsAuthenticated(true);
+        setLoading(false);
+      } catch (error) {
         setUser(null);
         setLoading(false);
+        setError(error.response.data.message);
       }
     }
     validadSesion();

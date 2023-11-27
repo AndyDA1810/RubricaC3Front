@@ -5,15 +5,15 @@ import { useUser } from "../context/UserContext";
 const Navbar = () => {
   const { logoutUser, isAuthenticated, user } = useUser();
   return (
-    <div className="navbar navbar-dark bg-dark">
-      <div className="d-felx">
+    <div className="navbar navbar-dark bg-dark p-3">
+      <div className="d-flex justify-content-between align-items-center w-100">
         {isAuthenticated ? (
           <h2 className="" style={{ color: "white" }}>
             Bienvenido {user.Nombre}
           </h2>
         ) : (
           <div>
-            <Link className="btn btn-dark" to="/ ">
+            <Link className="btn btn-dark" to="/">
               Inicio
             </Link>
             <Link className="btn btn-dark" to="/crear">
