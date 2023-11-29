@@ -1,37 +1,53 @@
 import { createContext, useContext, useState } from "react";
-import { CrearVentas } from "../api/login";
+import { CrearVentas, EliminarVenta, obtenerVentas } from "../api/login";
 
 export const VentaContext = createContext();
 
-export const useVenta = () => {
+export const useVentas = () => {
   const context = useContext(VentaContext);
-  if (!context) {
-    throw new error("User context not available");
-  }
+  if (!context) throw new Error("Venta context not available");
   return context;
 };
 
 export const VentaProvider = ({ children }) => {
-  const [venta, setVenta] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState("");
+  const [ventas, setVenta] = useState(null);
 
-  const crearVenta = async (venta) => {
+  const getVentas = async () => {
+    try {
+      const res = await obtenerVentas();
+
+      setVenta(res.data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const agregarVenta = async (venta) => {
     try {
       const res = await CrearVentas(venta);
-      console.log(res);
     } catch (error) {
       setError(error.response.data.message);
+    }
+  };
+  const handleDelete = async (Codigo) => {
+    try {
+      const response = await EliminarVenta(Codigo);
+      console.log(response.status);
+      if (response.status === 200) {
+        setVenta(ventas.filter((v) => v.Codigo !== Codigo));
+      }
+    } catch (error) {
+      console.log(error);
     }
   };
 
   return (
     <VentaContext.Provider
       value={{
-        crearVenta,
-        venta,
-        loading,
-        error,
+        getVentas,
+        agregarVenta,
+        handleDelete,
+        ventas,
       }}
     >
       {children}

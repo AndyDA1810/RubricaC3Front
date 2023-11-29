@@ -69,7 +69,7 @@ function FormularioProductos() {
   return (
     <div className="container mt-5">
       <div className="">
-        <h1>Crear Produto</h1>
+        <h1>Crear Producto</h1>
       </div>
       <div className="row justify-content-center">
         <div className="col-md-6"></div>

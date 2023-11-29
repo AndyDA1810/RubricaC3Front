@@ -9,7 +9,7 @@ const Navbar = () => {
       <div className="d-flex justify-content-between align-items-center w-100">
         {isAuthenticated ? (
           <h2 className="" style={{ color: "white" }}>
-            Bienvenido {user.Nombre}
+            Bienvenido {user.Nombre} {user.Rol}
           </h2>
         ) : (
           <div>

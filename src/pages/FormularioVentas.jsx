@@ -3,12 +3,13 @@ import { useParams } from "react-router-dom";
 import { useProductos } from "../context/ProductosContext";
 import { useFormik } from "formik";
 import * as Yup from "yup";
-import { useVenta } from "../context/VentaContexto";
+import { useVentas } from "../context/VentaContexto";
+import { CrearVentas } from "../api/login";
 
 const FormularioVentas = () => {
   const parametros = useParams();
   const { _obtenerProducto } = useProductos();
-  const { crearVenta } = useVenta();
+  const { crearVenta } = useVentas();
   const [producto, setProducto] = useState([]);
 
   useEffect(() => {
@@ -47,7 +48,7 @@ const FormularioVentas = () => {
         Fecha_venta: value.fechaVenta,
         Cantidad_vendida: value.cantidadVendida,
       };
-      crearVenta(venta);
+      CrearVentas(venta);
       window.location.href = "/productos";
     },
   });
@@ -55,6 +56,7 @@ const FormularioVentas = () => {
   if (producto.length === 0) {
     return <h1>Cargando</h1>;
   }
+  
   return (
     <div className="container text-center">
       <a href="/productos">&lt;-</a>

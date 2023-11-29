@@ -1,7 +1,6 @@
 import React, { useEffect } from "react";
 import { useUser } from "../context/UserContext";
 import { Link } from "react-router-dom";
-// import { EliminarProducto } from "../api/login";
 import { useProductos } from "../context/ProductosContext";
 
 const Productos = () => {
